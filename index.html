@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Transcription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2; /* Light gray background */
+            color: #333; /* Dark gray text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff; /* White background */
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Drop shadow effect */
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff; /* Blue header text color */
+        }
+
+        form {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            display: none; /* Hide the file input */
+        }
+
+        .button {
+            background-color: #007bff; /* Blue button background color */
+            color: #fff; /* White button text color */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .transcription {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa; /* Lighter gray for transcription area */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .download-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .transcribe-button {
+            margin-top: 10px;
+        }
+
+        .file-name {
+            font-style: italic;
+            color: #666; /* Gray text color for file name */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Transcription</h1>
+        <form action="/transcribe" method="post" enctype="multipart/form-data" id="upload-form">
+            <input type="file" name="audio" id="audio" accept=".mp3,.wav" onchange="displayFileName()">
+            <label for="audio" class="button">Upload Audio File</label>
+            <p id="file-name" class="file-name">No file selected</p>
+            <button type="submit" class="button transcribe-button" onclick="return validateForm()">Transcribe</button>
+        </form>
+        
+        {% if transcription %}
+        <div class="transcription">
+            <h3>Transcription:</h3>
+            <p>{{ transcription }}</p>
+            <a href="/download_transcription?transcription={{ transcription }}" class="download-link">Download Transcription</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function displayFileName() {
+            const fileInput = document.getElementById('audio');
+            const fileNameDisplay = document.getElementById('file-name');
+
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                fileNameDisplay.textContent = fileName;
+            } else {
+                fileNameDisplay.textContent = "No file selected";
+            }
+        }
+
+        function validateForm() {
+            const fileInput = document.getElementById('audio');
+
+            if (fileInput.files.length === 0) {
+                alert("Please select an audio file.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>
